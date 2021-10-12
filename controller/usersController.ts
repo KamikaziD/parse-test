@@ -29,7 +29,7 @@ exports.getUserById = async(req: Request, res: Response, next: NextFunction) => 
         const user = await query.find();
 
         res.status(200).json({ user });
-        
+
     } catch (err) {
         res.status(404).send(res.json({ "err": "An error occurred" }))
         next(err);
@@ -39,10 +39,11 @@ exports.getUserById = async(req: Request, res: Response, next: NextFunction) => 
 
 exports.addNewUser = async(req: Request, res: Response, next: NextFunction) => {
     const data = req.body;
+    const { name, age, livingCity } = req.body
 
-    const name: string = data.name;
-    const age: string = data.age;
-    const livingCity: string = data.livingCity;
+    // const name: string = data.name;
+    // const age: string = data.age;
+    // const livingCity: string = data.livingCity;
 
     const Person = Parse.Object.extend('Person');
             
