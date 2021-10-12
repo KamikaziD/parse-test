@@ -89,3 +89,17 @@ exports.addNewUser = async(req: Request, res: Response, next: NextFunction) => {
     
     console.log("Save Successful")
 };
+
+exports.deleteUserById = async (req: Request, res: Response, next: NextFunction) => {
+    let objectId = req.params.id;
+
+        const Person = Parse.Object.extend('Person');
+        const query = new Parse.Query(Person);
+        console.log(objectId)
+
+        const currentUser = await query.get(objectId);
+        await currentUser.destroy();
+
+        res.status(203).json({ success: true, message: "User was deleted" });
+
+};
