@@ -1,20 +1,18 @@
 import express from 'express';
 import Parse from "parse/node";
+const morgan = require('morgan');
 
 //ROUTES
 import users from "./routes/users";
-import user from "./routes/user";
-import addUser from "./routes/addUser";
 
 //CONFIG
 import { config } from "./constants/config";
 
 const app = express();
+app.use(morgan('dev'));
 
 app.use(express.json());
-app.use("/api/user/users", users);
-app.use("/api/user/user", user);
-app.use("/api/user/new", addUser);
+app.use("/api/users", users);
 
 
 const server = app.listen(config.SERVER_PORT, () => {
