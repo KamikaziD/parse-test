@@ -41,10 +41,6 @@ exports.addNewUser = async(req: Request, res: Response, next: NextFunction) => {
     const data = req.body;
     const { name, age, livingCity } = req.body
 
-    // const name: string = data.name;
-    // const age: string = data.age;
-    // const livingCity: string = data.livingCity;
-
     const Person = Parse.Object.extend('Person');
             
     const person = new Person();
