@@ -10,10 +10,10 @@ exports.getAllUsers = async(req: Request, res: Response, next: NextFunction) => 
         const query = new Parse.Query(Person);
         const allUsersList = await query.findAll();
 
-        res.status(200).json({ allUsersList });
+        res.status(200).json({ success: true, message: "Users returned successfully", allUsersList });
 
     } catch (err) {
-        res.status(404).send(res.json({ "err": "An error occurred" }))
+        res.status(404).json({ success: false, message: "An error occurred" });
         next(err);
     }
 };
@@ -28,10 +28,10 @@ exports.getUserById = async(req: Request, res: Response, next: NextFunction) => 
 
         const user = await query.find();
 
-        res.status(200).json({ user });
+        res.status(200).json({ success: true, message: "User returned successfully", user });
 
     } catch (err) {
-        res.status(404).send(res.json({ "err": "An error occurred" }))
+        res.status(404).json({ success: false, message: "An error occurred" });
         next(err);
     }
 
@@ -52,7 +52,7 @@ exports.addNewUser = async(req: Request, res: Response, next: NextFunction) => {
             person.set("livingCity", livingCity);
 
         } catch (e) {
-            console.log("Error setting new user ", e);
+            res.status(404).json({ success: false, message: "Error setting user" });
             next(e);
 
         }
@@ -79,27 +79,50 @@ exports.addNewUser = async(req: Request, res: Response, next: NextFunction) => {
     try { 
         await setUser(); 
         await person.save();
-        res.status(200).send(data);
+        res.status(200).json({ success: true, message: "User has been added", data})
 
     } catch (err) {
-        res.status(404).send(res.json({ "err": "An error occurred" }));
+        res.status(404).json({ success: false, message: "An error occurred" });
         next(err); 
     }
-    
-    
-    console.log("Save Successful")
 };
 
 exports.deleteUserById = async (req: Request, res: Response, next: NextFunction) => {
     let objectId = req.params.id;
 
-        const Person = Parse.Object.extend('Person');
-        const query = new Parse.Query(Person);
-        console.log(objectId)
+    const Person = Parse.Object.extend('Person');
+    const query = new Parse.Query(Person);
+    console.log(objectId)
 
-        const currentUser = await query.get(objectId);
-        await currentUser.destroy();
+    const currentUser = await query.get(objectId);
+    await currentUser.destroy();
 
-        res.status(203).json({ success: true, message: "User was deleted" });
+    res.status(203).json({ success: true, message: "User was deleted" });
 
+};
+
+exports.updateUser = async (req: Request, res: Response, next: NextFunction) => {
+
+    try {
+        let { id } = req.params;
+        let { name, age, livingCity } = req.body;
+
+        const User = Parse.Object.extend('Person');
+        const user = new User()
+
+        user.set("id", id);        
+        user.set("name", name);
+        user.set("age", age);
+        user.set("livingCity", livingCity);
+
+        const updatedUser = await user.save()
+
+        res.status(202).json({ success: true, message: "User updated successfully", updatedUser });
+
+    } catch (err) {
+        res.status(404).json({ success: false, message: "Error setting user" });
+        next(err);
+
+    };
+    
 };
