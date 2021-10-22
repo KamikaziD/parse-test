@@ -83,40 +83,39 @@ exports.addNewProductCatagory = async(req: Request, res: Response, next: NextFun
     }
 };
 
-exports.deleteUserById = async (req: Request, res: Response, next: NextFunction) => {
+exports.deleteProductCatagoryById = async (req: Request, res: Response, next: NextFunction) => {
     let objectId = req.params.id;
 
-    const Person = Parse.Object.extend('Person');
-    const query = new Parse.Query(Person);
+    const ProductCatagory = Parse.Object.extend('ProductCatagory');
+    const query = new Parse.Query(ProductCatagory);
     console.log(objectId)
 
-    const currentUser = await query.get(objectId);
-    await currentUser.destroy();
+    const currentProductCatagory = await query.get(objectId);
+    await currentProductCatagory.destroy();
 
-    res.status(203).json({ success: true, message: "User was deleted" });
+    res.status(203).json({ success: true, message: "Product Catagory was deleted" });
 
 };
 
-exports.updateUser = async (req: Request, res: Response, next: NextFunction) => {
+exports.updateProductCatagory = async (req: Request, res: Response, next: NextFunction) => {
 
     try {
         let { id } = req.params;
-        let { name, age, livingCity } = req.body;
+        let { product_catagory, product_description } = req.body;
 
-        const User = Parse.Object.extend('Person');
-        const user = new User()
+        const ProductCatagory = Parse.Object.extend('ProductCatagory');
+        const productcatagory = new ProductCatagory()
 
-        user.set("id", id);        
-        user.set("name", name);
-        user.set("age", age);
-        user.set("livingCity", livingCity);
+        productcatagory.set("id", id);        
+        productcatagory.set("product_catagory", product_catagory);
+        productcatagory.set("product_description", product_description);
 
-        const updatedUser = await user.save()
+        const updatedProductCatagory = await productcatagory.save()
 
-        res.status(202).json({ success: true, message: "User updated successfully", updatedUser });
+        res.status(202).json({ success: true, message: "Product Catagory updated successfully", updatedProductCatagory });
 
     } catch (err) {
-        res.status(404).json({ success: false, message: "Error setting user" });
+        res.status(404).json({ success: false, message: "Error setting product category" });
         next(err);
 
     };
