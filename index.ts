@@ -5,6 +5,7 @@ const morgan = require('morgan');
 //ROUTES
 import users from "./routes/users";
 import productCatagories from "./routes/productCatagory";
+import suppliers from "./routes/suppiers";
 
 //CONFIG
 import { config } from "./constants/config";
@@ -14,8 +15,8 @@ app.use(morgan('dev'));
 
 app.use(express.json());
 app.use("/api/users", users);
-app.use("/api/productcatagories", productCatagories)
-
+app.use("/api/productcatagories", productCatagories);
+app.use("/api/suppliers", suppliers);
 
 const server = app.listen(config.SERVER_PORT, () => {
     Parse.initialize(config.APP_ID, config.JAVASCRIPT_KEY, config.MASTER_KEY);
