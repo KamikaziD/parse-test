@@ -6,6 +6,7 @@ const morgan = require('morgan');
 import users from "./routes/users";
 import productCatagories from "./routes/productCatagory";
 import suppliers from "./routes/suppiers";
+import receiveStock from "./routes/receiveStock";
 
 //CONFIG
 import { config } from "./constants/config";
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use("/api/users", users);
 app.use("/api/productcatagories", productCatagories);
 app.use("/api/suppliers", suppliers);
+app.use("/api/receivestock", receiveStock);
 
 const server = app.listen(config.SERVER_PORT, () => {
     Parse.initialize(config.APP_ID, config.JAVASCRIPT_KEY, config.MASTER_KEY);
