@@ -7,53 +7,50 @@ import Parse from "parse/node";
 exports.getReceivedStock = async (req: Request, res: Response, next: NextFunction) => {
     
     try {
-        const receiveStock = Parse.Object.extend("receiveStock");
-        const query = new Parse.Query(receiveStock);
-        query.include("product")
-        query.include("product.supplier")
-        query.include("product.item")
+        const Products = Parse.Object.extend("Products");
+        const query = new Parse.Query(Products);
+        query.include("supplier")
+        query.include("stockOnHand");
+        query.include("item")
+
+        var productsList = new Array();
+
+        let myObject = query.equalTo("objectId", "WxuHlbuEix");
+
+        let myProducts = await myObject.first();
+        console.log(myProducts);
+        
 
         await query.find().then(function (results){
-            var receivedStockList = new Array();
             for(let i in results){
                 var obj = results[i];
                 var id = obj.id
-                var productItem = obj.get("product").get("item").get("item");
-                var productDescription = obj.get("product").get("item").get("item_description");
-                var container = obj.get("containerNumber");
-                var receivedWeight = obj.get("weight");
-                var price = obj.get("product").get("price");
-                var productSupplier = obj.get("product").get("supplier").get("supplier_name");
-                var productSupplierCode = obj.get("product").get("supplier").get("supplier_code");
+                var productItem = obj.get("item").get("item");
+                var productDescription = obj.get("item").get("item_description");
+                var supplier = obj.get("supplier").get("supplier_name");
+                var stock = obj.get("stockOnHand")
+                var price = obj.get("price");
                 var updated = obj.get("updatedAt");
                 var created = obj.get("createdAt");
                 
-                receivedStockList.push({
-                    recievedStock: {
+                productsList.push({
+                    Products: {
                         objectId: id,
                         item: productItem,
                         description: productDescription,
-                        supplier: {
-                            productSupplier,
-                            supplierCode: productSupplierCode,
-                        },
-                        
-                        stock: receivedWeight,
-                        container,                      
-                        stockValue: price * receivedWeight,
+                        supplier,
+                        stock,
                         pricePerKilo: price,
                         updated,
-                        created,
-                         
-                        
+                        created, 
                     }
+                    
                 });
-                
             }
-            res.status(200).json({ success: true, message: "Suppliers returned successfully", receivedStockList });
+            
         });
 
-
+        await res.status(200).json({ success: true, message: "Suppliers returned successfully", productsList });
         
 
     } catch (err) {
